@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> ATU web </title>
+    <link rel="stylesheet" href="style_index.css">
+ 
+</head>
+
+<body>
+
+    <div class="box">
+
+        <label id="heading"> Welcome to ATU online inquiry service !</label> <br><br><br>
+        <label id="heading2"> Please enter the course and project you are taking </label>
+
+    </div>
+
+    <form id="inputForm" autocomplete="off">
+        <input type="text" placeholder="Course" id="courseField">
+        <input type="text" placeholder="Project" id="projectField">
+        <input type="button" value="Submit" onclick="onsubmitPressed()">
+    </form>
+
+
+    <script>
+
+        // whenevr user come back to this page, reset the sessionStorage
+        sessionStorage.removeItem("_atu_course");
+        sessionStorage.removeItem("_atu_project");
+
+        // add the eventListener onsubmit for the form
+        function onsubmitPressed() {
+            let courseName = document.getElementById("courseField").value.toString().toLowerCase();
+            let projectName = document.getElementById("projectField").value.toString();
+
+            console.log("hihi" + courseName, " ", projectName);
+
+            sessionStorage.setItem("_atu_course", courseName);
+            sessionStorage.setItem("_atu_project", projectName);
+
+            location.href = "inquiry.html";
+        }
+
+
+
+    </script>
+
+
+</body>
+
+</html>

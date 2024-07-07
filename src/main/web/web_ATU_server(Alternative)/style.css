@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+h1 {
+    top: 10px;
+    left: 30px;
+    position: absolute;
+    color: rgba(124, 67, 107, 0.753);
+    font-size: 42px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+}
+
+body{
+    font-family: 'Quicksand', sans-serif;
+}
+
+#open {
+    position: relative;
+    align-content: right;
+    float: right;
+}
+
+#close {
+    position: relative;
+    align-content: right;
+    float: right;
+    display: none;
+}
+
+canvas {
+    padding: 25px;
+    background-color: rgb(255, 255, 255);
+    opacity: 0.7;
+    
+    max-width: 43%;
+    
+    display: none;
+    
+    align-content: right;
+    float: right;
+    position: relative;
+}
+
+#chartDiv{
+    z-index: 1;
+    margin-top: 5%;
+}
+
+canvas:hover{
+    opacity: 0.91;
+    transition:opacity 0.4s;
+}
+
+
+.container::after{
+    content: "";
+    background: url("ustBackground.png") no-repeat center;
+    opacity: 0.7;
+    left: 0;
+    top:0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-size: cover;
+    z-index: -1;            /*make the background not covering the input form*/
+}
+
+
+ 
+.box{
+    position: absolute;
+    background:white;
+    width:300px;
+    border-radius:6px;
+    margin: 1% 0px 20px 10%;  
+    padding: 0px 0px 12px 8px;
+    border: #2980b9 6px solid; 
+  }
+  
+  .email{
+    background:#ecf0f1;
+    border: #ccc 1px solid;
+    border-bottom: #ccc 2px solid;
+    padding: 12px;
+    
+    width: 82%;
+
+
+    color:#AAAAAA;
+    margin-top:10px;
+    margin-left: 5px;
+    font-size:1em;
+    border-radius:4px;
+  }
+  
+  
+  .btn{
+    background:#2ecc71;
+    width:90px;
+    height: 100%;
+    padding-top:5px;
+
+    padding-left: 5px;
+    color:white;
+    border-radius:8px;
+    border: #92b8a18f 5px solid;
+    
+    margin-top:20px;
+    margin-bottom:5px;
+    float:left;
+    margin-left:185px;
+    font-weight:800;
+    font-size:1em;
+  }
+  
+  .btn:hover{
+    background:#2CC06B; 
+  }
+  
+
+#result {
+    background-color:rgba(255, 255, 255, 0.658);
+    position: absolute;
+    left: -2px;
+    top: 63%;
+    text-align: center;
+    /* display: none */
+    font-weight: 750;
+    display: none;
+}
+    
+table, td {
+    left:20px;
+    top:500px;
+    border:1px solid black;
+}

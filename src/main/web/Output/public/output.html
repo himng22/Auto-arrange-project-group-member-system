@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+    <head>
+        <style>
+        h1 {
+            font-weight: bold;
+            color: red;
+            font-size: 50px;
+        }
+
+        button {
+            position: absolute;
+            left: 1850px;
+            top: 25px;
+        }
+        canvas {
+            position: absolute;
+            left: 1150px;
+            top: 50px;
+        }
+        body {
+            background-image: url('HKUST.jpg');
+            background-size: cover;
+        }
+
+        #search{
+            width: 300px;
+            background-color: red;
+            position: relative;
+            transform: translateY(100%);
+            margin: 10px;   
+        }
+        
+        #info{
+            transform: translateY(1500%);
+            background-color: white;
+            border: 2px solid black;
+        }
+
+        </style>
+    </head>
+    <body>
+        <h1>Welcome to use the ATU engine!</h1>
+
+        <div>
+            <canvas id="myChart" style="width:100%;max-width:700px" ></canvas>
+        </div>
+
+        <button onclick="openchart()" x = "" y ="">Chart</button>
+
+        <form name = "search" id = "search" method="get" action="/target" x = 25%>
+            <p>Student Name: <input type="text" name="studentname"></p>
+            <p>StudentID: &ensp;&ensp;&ensp;<input type="text" name="studentID"></p>
+            <p>Email: &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<input type="text" name="email"></p>
+            <p><input type="submit"></p>    
+        </form>
+
+        <table id = "info">
+            <tr>
+                <td>1</td>
+                <td>2</td>   
+            </tr>
+        </table>
+
+
+        <script>
+
+            function openchart() {
+                var xValues = [50,60,70,80,90,100,110,120,130,140,150];
+                var yValues = [7,8,8,9,9,9,10,11,14,14,15];
+
+                new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                    fill: false,
+                    lineTension: 0,
+                    backgroundColor: "rgba(0,0,255,1.0)",
+                    borderColor: "rgba(0,0,255,0.1)",
+                    data: yValues
+                    }]
+                },
+                options: {
+                    legend: {display: false},
+                    scales: {
+                    yAxes: [{ticks: {min: 6, max:16}}],
+                    }
+                }
+                });
+            }  
+        </script>
+
+
+
+    </body>
+</html>

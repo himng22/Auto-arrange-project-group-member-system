@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<head>
+    <title> ATU inquiry service </title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <div class="container" id="ui">
+
+
+        <div id="chartDiv">
+            <canvas id="myChart"></canvas>
+
+            <button id="open" onclick="openchart()" x="" y="" class="btn2">Chart</button>
+            <button id="close" onclick="closechart()" x="" y="" class="btn2">Close</button>
+        </div>
+
+
+        <form>
+            <div class="box">
+
+                <input type="text" name="Name" class="email" placeholder="Name" id="studentname" />
+
+                <input type="text" name="SID" class="email" placeholder="SID" id="studentID" />
+
+                <input type="email" name="email" class="email" placeholder="abc@connect.ust.hk" id="email" />
+
+                <input class="btn" type="button" onclick="submitdata()" value="Submit">
+            </div>
+
+    </div> <!-- End Box -->
+    </form>
+    </div>
+
+
+
+    <table id="result" style="width:100%">
+        <colgroup>
+            <col class="col1"/>
+            <col class="col2"/>
+            <col class="col3"/>
+            <col class="col4"/>
+            <col class="col5"/>
+          </colgroup>
+        <tr>
+            <td rowspan="2">User's Input</td>
+            <td>My Student id:</td>
+            <td id="ID" colspan="3">12345678</td>
+        </tr>
+        <tr>
+            <td>My name:</td>
+            <td id="Name" colspan="3">Maria Anders</td>
+        </tr>
+        <tr>
+            <td rowspan="5">Data Output</td>
+            <td>My Team No.</td>
+            <td id="TeamNo" colspan="3">1</td>
+        </tr>
+        <td rowspan="2">My Teammates</td>
+        <td width="200">1</td>
+        <td width="200">2</td>
+        <td width="200">3</td>
+        <tr>
+            <td id="FirstStudent">1</td>
+            <td id="SecondStudent">2</td>
+            <td>-</td>
+        </tr>
+        <td rowspan="2">Our Team Energy</td>
+        <td>K1_average</td>
+        <td>K2_average</td>
+        <td></td>
+        <tr>
+            <td id="K1_average">1</td>
+            <td id="K2_average">2</td>
+            <td>-</td>
+        </tr>
+    </table>
+
+    <script>
+
+        /* This part is for requesting json file online
+        */
+
+        // validation on data from last page: index.html     
+        const isEmpty = str => !str.trim().length;                      // function for checking trimming off white spaces then check if it is empty
+        let courseName = sessionStorage.getItem("_atu_course");         // (data from last page is get from sessionStorage)
+        let projectName = sessionStorage.getItem("_atu_project");
+   
+        if (courseName == null || projectName == null || isEmpty(courseName) || isEmpty(projectName)) {
+            document.getElementById("ui").style.display = "none";        // hide the UI
+            alert("Please fill in both course name and project name !!");
+            throw new Error("Process terminated");                      // throw an error to exit() on purpose
+        }
+
+        let teamList;           // array variable that is going to store the JSON data getting from database sever
+        let show_valid = true;  // check if the course project's data can be retrieved from sever
+
+
+        // using jsonbin.org API, need to add path for getting different json file
+        const severURL_filebinorg = "https://jsonbin.org/mynameisissac/";
+        let pathName = courseName + "_" + projectName;
+        let severURL = severURL_filebinorg + pathName;
+        let req = new XMLHttpRequest();
+        req.open("GET", severURL, false);           // synchronous
+        req.send();                                 // send the HTTP GET request
+        if (req.readyState == XMLHttpRequest.DONE) {          // It means if request finished and response is ready   <<-- careful            
+            show_valid = (req.status != 404);
+            if (show_valid)
+                teamList = JSON.parse(req.responseText);
+        }
+
+
+
+        if (!show_valid) {       // if data is not in sever -> student probably enter wrong course and project name
+            document.getElementById("ui").style.display = "none";        // hide the UI
+            document.write("<h1>We cannot find any record of this course project, please double check your input.</h1> <h2><a href='index.html'>Go back</a></h2>");
+            throw new Error("Process terminated");                      // throw an error to exit() on purpose
+        }
+
+        //console.log(teamList);                              // <<-- debug
+
+        // YOU can use teamList as the array of team now
+        // BEN
+
+        let stuList = [];       // array of student object
+
+        for (let i = 0; i < teamList.length; i++) {
+            for (let j = 0; j < teamList[i].members.length; j++)
+                stuList.push(teamList[i].members[j]);
+        }
+
+        // callback function for sorting stuList in descending order of k1_energy
+        const compare = (obj1, obj2) => {
+            if (obj1.k1_energy > obj2.k1_energy)        // descending order
+                return -1;
+            else if (obj1.k1_energy < obj2.k1_energy)
+                return 1;
+            else
+                return 0;
+        }
+
+        stuList.sort(compare);                              // sort the student list
+        //console.log("after sorting ", stuList);             // <<-- debug
+
+
+        var xValues = [];
+        var chart_k1energy = [];
+        var chart_k2energy = [];
+        let count = 0;
+
+        for (i = 0; i < stuList.length; i++) {
+            xValues[i] = i + 1;
+            chart_k1energy[i] = stuList[i].k1_energy;
+            chart_k2energy[i] = stuList[i].k2_energy;
+        }
+
+
+        function submitdata() {
+
+            console.log(document.getElementById("studentID").value);
+
+            // simple validation before running algorithm
+            if (isEmpty(document.getElementById("studentID").value) ||
+                isEmpty(document.getElementById("studentname").value) ||
+                isEmpty(document.getElementById("studentname").value)) {
+
+                alert("Pleas fill in all required fields !!");
+                return false;
+            }
+
+
+            let found = false;          // whether the student is found in the team list
+            let team_no = 0;
+            let team_position = 0;
+            let k1_average = 0;
+            let k2_average = 0;
+
+            // search the ID
+            for (i = 0; i < teamList.length; i++) {
+                for (j = 0; j < teamList[i].members.length; j++) {              // here we ensure student must input all three info correctly in order to get his team info
+                    if (teamList[i].members[j].id == document.getElementById("studentID").value
+                        && teamList[i].members[j].name == document.getElementById("studentname").value
+                        && teamList[i].members[j].email == document.getElementById("email").value) {
+                        team_no = i;
+                        team_position = j;
+                        found = true;
+                    }
+                }
+            }
+
+            // input the data to the table
+            if (found) {
+                $("#result").show();
+                document.getElementById('ID').innerHTML = document.getElementById("studentID").value;
+                document.getElementById('Name').innerHTML = teamList[team_no].members[team_position].name;
+                document.getElementById('TeamNo').innerHTML = teamList[team_no].id;
+                let temp = 0;
+
+                for (i = 0; i < teamList[team_no].members.length; i++) {
+                    k1_average += teamList[team_no].members[i].k1_energy;
+                    k2_average += teamList[team_no].members[i].k2_energy;
+
+                    if (teamList[team_no].members[i].id != document.getElementById("studentID").value) {
+                        if (temp == 0) {
+                            document.getElementById('FirstStudent').innerHTML = teamList[team_no].members[i].name;
+                            temp++;
+                        }
+
+                        if (temp == 1) {
+                            document.getElementById('SecondStudent').innerHTML = teamList[team_no].members[i].name;
+                        }
+                    }
+                }
+
+                document.getElementById('K1_average').innerHTML = (k1_average / teamList[team_no].members.length).toFixed(2);
+                document.getElementById('K2_average').innerHTML = (k2_average / teamList[team_no].members.length).toFixed(2);
+
+            }
+            else {          // student not found
+                alert("Sorry, we cannot find your record, please contact the instructor.");
+            }
+
+            // reset value in the input box
+            document.getElementById("studentID").value = "";
+            document.getElementById("studentname").value = "";
+            document.getElementById("email").value = "";
+        }
+
+        function openchart() {
+            $("#close").show();
+            $("canvas").show();
+            $("#open").hide();
+
+            var xValues = [];
+            var chart_k1energy = [];
+            var chart_k2energy = [];
+            let count = 0;
+
+            for (i = 0; i < stuList.length; i++) {
+                xValues[i] = i + 1;
+                chart_k1energy[i] = stuList[i].k1_energy;
+                chart_k2energy[i] = stuList[i].k2_energy;
+            }
+
+            new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        label: "K1 energy",
+                        data: chart_k1energy,
+                        borderColor: "blue",
+                        fill: false
+                    }, {
+                        label: "K2 energy",
+                        data: chart_k2energy,
+                        borderColor: "orange",
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Students'
+                            }
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Amount of energy'
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: true
+                    },
+                    title: {
+                        display: true,
+                        text: "Students' K1_energy and K2_energy"
+                    }
+                }
+            });
+        }
+
+        function closechart() {
+            $("#close").hide();
+            $("canvas").hide();
+            $("#open").show();
+        }
+    </script>
+
+
+</body>
+
+</html>

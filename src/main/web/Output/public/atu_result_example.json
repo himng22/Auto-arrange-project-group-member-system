@@ -1,0 +1,33 @@
+[
+	{
+		"id" : 0,
+		"leaderName" : "Peter",
+		"members" : [
+			{"id" : "20067232", "name" : "Peter", "email" : "kshou@connect.ust.hk", "k1_energy" : 92, "k2_energy" : 12},
+			{"id" : "20026352", "name" : "Ben", "email" : "ben@connect.ust.hk", "k1_energy" : 80, "k2_energy" : 76},
+			{"id" : "20127294", "name" : "Sam", "email" : "sam@connect.ust.hk", "k1_energy" : 53, "k2_energy" : 62}
+		]
+		
+	},
+	{
+		"id" : 1,
+		"leaderName" : "Frank",
+		"members" : [
+			{"id" : "20067232", "name" : "Frank", "email" : "kshou@connect.ust.hk", "k1_energy" : 92, "k2_energy" : 12},
+			{"id" : "20026352", "name" : "Kay", "email" : "kay@connect.ust.hk", "k1_energy" : 80, "k2_energy" : 76},
+			{"id" : "20127294", "name" : "Kat", "email" : "kat@connect.ust.hk", "k1_energy" : 53, "k2_energy" : 62}
+		]
+		
+	},
+	{
+		"id" : 2,
+		"leaderName" : "Chris",
+		"members" : [
+			{"id" : "20067232", "name" : "Chris", "email" : "kshou@connect.ust.hk", "k1_energy" : 92, "k2_energy" : 12},
+			{"id" : "20026352", "name" : "Ben", "email" : "ben@connect.ust.hk", "k1_energy" : 80, "k2_energy" : 76},
+			{"id" : "20127294", "name" : "Sam", "email" : "sam@connect.ust.hk", "k1_energy" : 53, "k2_energy" : 62}
+		]
+		
+	}
+	
+]
