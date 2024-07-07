@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()          // find in maven repository
+}
+
+dependencies {
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+
+    // openCSV library
+    // https://mvnrepository.com/artifact/com.opencsv/opencsv
+    implementation group: 'com.opencsv', name: 'opencsv', version: '3.7'
+
+    // JSON library
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation group: 'org.json', name: 'json', version: '20200518'
+
+    // apache io library
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation group: 'commons-io', name: 'commons-io', version: '2.7'
+
+    // for carrying out Junit test with JavaFX
+    // https://github.com/TestFX/TestFX
+    // https://mvnrepository.com/artifact/org.testfx/testfx-junit
+    testImplementation group: 'org.testfx', name: 'testfx-junit', version: '4.0.15-alpha'
+}
+
+javafx {
+    version = "19"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
+}
+
+// locate the main class
+mainClassName = 'ATU.Main'
